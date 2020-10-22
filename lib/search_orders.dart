@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flappy_search_bar/scaled_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:gs_web/dashboard.dart';
 import 'package:gs_web/widgets/order_data.dart';
+import 'package:icon_badge/icon_badge.dart';
 
 class SearchOrders extends StatefulWidget {
   @override
@@ -49,6 +51,39 @@ class _SearchOrdersState extends State<SearchOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("billing")
+                  .snapshots(),
+              builder: (context, snapshot2) {
+                if (snapshot2.hasData) {
+                  return IconBadge(
+                    icon: Icon(Icons.home),
+                    itemCount: snapshot2.data.docs?.length ?? 0,
+                    badgeColor: Colors.red,
+                    itemColor: Colors.white,
+                    maxCount: 10,
+                    hideZero: true,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Dashboard()));
+                    },
+                  );
+                } else {
+                  return IconButton(
+                      icon: Icon(Icons.home),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Dashboard()));
+                      });
+                }
+              }),
+        ],
         title: Text("Find Products"),
       ),
       body: SafeArea(

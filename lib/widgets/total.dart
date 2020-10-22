@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 class ExpenseItemTotalWidget extends StatelessWidget {
+  final dynamic total;
+  ExpenseItemTotalWidget({this.total});
 
 
   @override
@@ -30,7 +32,8 @@ class ExpenseItemTotalWidget extends StatelessWidget {
                       width: 8,
                     ),
                     Expanded(
-                      child: TextField(
+                      child: TextFormField(
+                        initialValue: total.toString(),
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey, width: 2.0),
