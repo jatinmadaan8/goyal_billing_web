@@ -32,7 +32,7 @@ class ExpenseItemHeaderWidget extends StatelessWidget {
           Expanded(
               flex: 1,
               child: Text(
-                "Amount",
+                "Quantity",
                 style: GoogleFonts.mitr(fontSize: 16),
                 textAlign: TextAlign.center,
               )),

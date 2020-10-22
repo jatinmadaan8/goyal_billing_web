@@ -1,13 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gs_web/search_orders.dart';
 import 'package:gs_web/widgets/itemHeader.dart';
 import 'package:gs_web/widgets/total.dart';
-
-// import 'expense_item_header_widget.dart';
-// import 'expense_item_total_widget.dart';
-// import 'expense_item_widget.dart';
-// import 'expense_person.dart';
-// import 'my_text_field.dart';
 import 'mycard.dart';
 
 int index = 0;
@@ -19,15 +16,12 @@ class FormWidget extends StatefulWidget {
 }
 
 class _FormWidgetState extends State<FormWidget> {
-  
   int _count = 1;
-
-  
-
+  bool enableRemove = true;
   @override
   Widget build(BuildContext context) {
-    List<Widget> _items =
-        new List.generate(_count, (int i) => new AddNewItem());
+    // List<Widget> _items =
+    //     new List.generate(_count, (int i) => new AddNewItem());
     return MyCard(
       borderRadius: BorderRadius.circular(12),
       child: Column(
@@ -45,13 +39,14 @@ class _FormWidgetState extends State<FormWidget> {
             SizedBox(
               width: 16,
             ),
-            Expanded(child: TextField(
-              // controller: name, 
-              textAlign: TextAlign.center,
-              // hintText: ".."
-              style: TextStyle(
-                fontSize: 22,  )
-              ),
+            Expanded(
+              child: TextField(
+                  // controller: name,
+                  textAlign: TextAlign.center,
+                  // hintText: ".."
+                  style: TextStyle(
+                    fontSize: 22,
+                  )),
             )
           ]),
           SizedBox(
@@ -73,15 +68,230 @@ class _FormWidgetState extends State<FormWidget> {
           ),
           Container(
             height: MediaQuery.of(context).size.height * 0.4,
-            child: ListView(
-              children: _items,
-            ),
+            child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance.collection('billing').orderBy('itemName').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      // height: MediaQuery.of(context).size.height * 0.4,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.docs?.length ?? 0,
+                        itemBuilder: (context,index){
+                          return Container(
+                            margin: EdgeInsets.symmetric(vertical: 4),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                        constraints: BoxConstraints(minWidth: 32),
+                                        child: Text(
+                                          "•",
+                                          style: GoogleFonts.mitr(fontSize: 20),
+                                          textAlign: TextAlign.end,
+                                        )),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 16,
+                                            ),
+                                            // Expanded(
+                                            //     child: TextField(
+                                            //       // controller: expenseItemController.nameController, fontSize: 22,  hintText: ".."
+                                            //       textAlign: TextAlign.center,
+                                            //       decoration: new InputDecoration(
+                                            //         hintText: "Enter Item Name",
+                                            //       ),
+                                            //     )),
+                                            Expanded(
+                                              child: Text(
+                                                snapshot.data.docs[index].data()['itemName'],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 16,
+                                            ),
+                                          ],
+                                        )),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Row(children: [
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                        Expanded(
+                                            child: TextFormField(
+                                              initialValue: snapshot.data.docs[index].data()['itemPrice'],
+                                              // controller: expenseItemController.priceController,
+                                              // fontSize: 22,
+                                              textAlign: TextAlign.center,
+                                              keyboardType: TextInputType.numberWithOptions(
+                                                signed: false,
+                                                decimal: true,
+                                              ),
+                                              decoration: new InputDecoration(
+                                                hintText: "Enter Price",
+                                              ),
+                                              // hintText: "0",
+                                              // onChanged: (text) {
+                                              //   double price = double.tryParse(text) ?? 0;
+                                              //   if (onPriceChanged != null) {
+                                              //     onPriceChanged(expenseItemController, price);
+                                              //   }
+                                              // }
+                                            )),
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                      ]),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 16,
+                                          ),
+                                          GestureDetector(
+                                            // onTap: () {
+                                            //   expenseItemController.decreaseAmount();
+                                            //   if (onAmountChanged != null) {
+                                            //     onAmountChanged(expenseItemController, expenseItemController.expenseItem.amount);
+                                            //   }
+                                            // },
+                                            child: Container(
+                                              padding: EdgeInsets.all(6),
+                                              child: Icon(
+                                                Icons.remove,
+                                                color: Colors.white,
+                                                size: 32,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.orange[300],
+                                                  borderRadius: BorderRadius.circular(6)),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 6,
+                                          ),
+                                          Expanded(
+                                              child: TextField(
+                                                // controller: expenseItemController.amountController,
+                                                textAlign: TextAlign.center,
+                                                decoration: new InputDecoration(
+                                                  hintText: "0",
+                                                ),
+                                                //
+                                                // onChanged: (text) {
+                                                //   int amount = double.tryParse(text) ?? 0;
+                                                //   if (onAmountChanged != null) {
+                                                //     onAmountChanged(expenseItemController, amount);
+                                                //   }
+                                                // }
+                                              )),
+                                          SizedBox(
+                                            width: 6,
+                                          ),
+                                          GestureDetector(
+                                            // onTap: () {
+                                            //   expenseItemController.increaseAmount();
+                                            //   if (onAmountChanged != null) {
+                                            //     onAmountChanged(expenseItemController, expenseItemController.expenseItem.amount);
+                                            //   }
+                                            // },
+                                            child: Container(
+                                              padding: EdgeInsets.all(6),
+                                              child: Icon(
+                                                Icons.add,
+                                                color: Colors.white,
+                                                size: 32,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.blue[300],
+                                                  borderRadius: BorderRadius.circular(6)),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 16,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Expanded(
+                                              child: TextField(
+                                                textAlign: TextAlign.center,
+                                                decoration: new InputDecoration(
+                                                  hintText: "0",
+                                                ),
+                                                // controller: expenseItemController.sumController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.primary()
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                          ],
+                                        )),
+                                    if (enableRemove)
+                                      GestureDetector(
+                                        // onTap: onRemoveItem,
+                                        child: Container(
+                                          padding: EdgeInsets.all(6),
+                                          child: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 32,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: Colors.red[300],
+                                              borderRadius: BorderRadius.circular(6)),
+                                        ),
+                                      )
+                                    else
+                                      Container(
+                                        padding: EdgeInsets.all(6),
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 32,
+                                        ),
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[100],
+                                            borderRadius: BorderRadius.circular(6)),
+                                      )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    );
+                  } else {
+                    return Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  }
+                }),
           ),
           InkWell(
             onTap: () {
-              setState(() {
-                _addNewItemRow();
-              });
+              // setState(() {
+              //   _addNewItemRow();
+              // });
+
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SearchOrders()));
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 6, horizontal: 32),
@@ -99,7 +309,9 @@ class _FormWidgetState extends State<FormWidget> {
                   width: 8,
                 )
               ]),
-              decoration: BoxDecoration(color: Colors.green[300], borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                  color: Colors.green[300],
+                  borderRadius: BorderRadius.circular(12)),
             ),
           ),
           SizedBox(
@@ -123,6 +335,7 @@ class _FormWidgetState extends State<FormWidget> {
       ),
     );
   }
+
   void _addNewItemRow() {
     setState(() {
       _count = _count + 1;
@@ -137,6 +350,7 @@ class AddNewItem extends StatefulWidget {
 
 class _AddNewItemState extends State<AddNewItem> {
   bool enableRemove = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -160,14 +374,13 @@ class _AddNewItemState extends State<AddNewItem> {
                         width: 16,
                       ),
                       Expanded(
-                        child: TextField(
-                          // controller: expenseItemController.nameController, fontSize: 22,  hintText: ".."
-                          textAlign: TextAlign.center,
-                          decoration: new InputDecoration(
-                            hintText: "Enter Item Name",
-                          ),
-                          )
+                          child: TextField(
+                        // controller: expenseItemController.nameController, fontSize: 22,  hintText: ".."
+                        textAlign: TextAlign.center,
+                        decoration: new InputDecoration(
+                          hintText: "Enter Item Name",
                         ),
+                      )),
                       SizedBox(
                         width: 16,
                       ),
@@ -175,31 +388,30 @@ class _AddNewItemState extends State<AddNewItem> {
                   )),
               Expanded(
                 flex: 1,
-                child: Row(
-                  children: [
+                child: Row(children: [
                   SizedBox(
                     width: 16,
                   ),
                   Expanded(
                       child: TextField(
-                          // controller: expenseItemController.priceController,
-                          // fontSize: 22,
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.numberWithOptions(
-                            signed: false,
-                            decimal: true,
-                          ),
-                          decoration: new InputDecoration(
-                            hintText: "Enter Price",
-                          ),
-                          // hintText: "0",
-                          // onChanged: (text) {
-                          //   double price = double.tryParse(text) ?? 0;
-                          //   if (onPriceChanged != null) {
-                          //     onPriceChanged(expenseItemController, price);
-                          //   }
-                          // }
-                          )),
+                    // controller: expenseItemController.priceController,
+                    // fontSize: 22,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.numberWithOptions(
+                      signed: false,
+                      decimal: true,
+                    ),
+                    decoration: new InputDecoration(
+                      hintText: "Enter Price",
+                    ),
+                    // hintText: "0",
+                    // onChanged: (text) {
+                    //   double price = double.tryParse(text) ?? 0;
+                    //   if (onPriceChanged != null) {
+                    //     onPriceChanged(expenseItemController, price);
+                    //   }
+                    // }
+                  )),
                   SizedBox(
                     width: 16,
                   ),
@@ -226,7 +438,9 @@ class _AddNewItemState extends State<AddNewItem> {
                           color: Colors.white,
                           size: 32,
                         ),
-                        decoration: BoxDecoration(color: Colors.orange[300], borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(
+                            color: Colors.orange[300],
+                            borderRadius: BorderRadius.circular(6)),
                       ),
                     ),
                     SizedBox(
@@ -234,19 +448,19 @@ class _AddNewItemState extends State<AddNewItem> {
                     ),
                     Expanded(
                         child: TextField(
-                            // controller: expenseItemController.amountController,
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
-                            hintText: "0",
-                          ),
-                            //  
-                            // onChanged: (text) {
-                            //   int amount = double.tryParse(text) ?? 0;
-                            //   if (onAmountChanged != null) {
-                            //     onAmountChanged(expenseItemController, amount);
-                            //   }
-                            // }
-                            )),
+                      // controller: expenseItemController.amountController,
+                      textAlign: TextAlign.center,
+                      decoration: new InputDecoration(
+                        hintText: "0",
+                      ),
+                      //
+                      // onChanged: (text) {
+                      //   int amount = double.tryParse(text) ?? 0;
+                      //   if (onAmountChanged != null) {
+                      //     onAmountChanged(expenseItemController, amount);
+                      //   }
+                      // }
+                    )),
                     SizedBox(
                       width: 6,
                     ),
@@ -264,7 +478,9 @@ class _AddNewItemState extends State<AddNewItem> {
                           color: Colors.white,
                           size: 32,
                         ),
-                        decoration: BoxDecoration(color: Colors.blue[300], borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(
+                            color: Colors.blue[300],
+                            borderRadius: BorderRadius.circular(6)),
                       ),
                     ),
                     SizedBox(
@@ -281,13 +497,13 @@ class _AddNewItemState extends State<AddNewItem> {
                         width: 8,
                       ),
                       Expanded(
-                          child: TextField(
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          decoration: new InputDecoration(
                             hintText: "0",
                           ),
-                              // controller: expenseItemController.sumController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.primary()
-                          ),
+                          // controller: expenseItemController.sumController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.primary()
+                        ),
                       ),
                       SizedBox(
                         width: 8,
@@ -304,7 +520,9 @@ class _AddNewItemState extends State<AddNewItem> {
                       color: Colors.white,
                       size: 32,
                     ),
-                    decoration: BoxDecoration(color: Colors.red[300], borderRadius: BorderRadius.circular(6)),
+                    decoration: BoxDecoration(
+                        color: Colors.red[300],
+                        borderRadius: BorderRadius.circular(6)),
                   ),
                 )
               else
@@ -315,7 +533,9 @@ class _AddNewItemState extends State<AddNewItem> {
                     color: Colors.white,
                     size: 32,
                   ),
-                  decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(6)),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(6)),
                 )
             ],
           ),

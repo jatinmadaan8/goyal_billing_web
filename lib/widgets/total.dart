@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-// import 'package:fluttershareexpense/languages/my_language.dart';
-// import 'package:fluttershareexpense/ui/widgets/my_checkbox.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// import '../../expense_person.dart';
-import 'my_checkbox.dart';
-// import 'my_text_field.dart';
+
 
 class ExpenseItemTotalWidget extends StatelessWidget {
-  // final ExpensePerson expensePerson;
-  // final Function(ExpensePerson) onChanged;
 
-  // ExpenseItemTotalWidget(this.expensePerson,{this.onChanged});
 
   @override
   Widget build(BuildContext context) {
