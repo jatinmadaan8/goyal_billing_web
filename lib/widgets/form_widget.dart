@@ -19,7 +19,12 @@ class _FormWidgetState extends State<FormWidget> {
   int _count = 1;
   bool enableRemove = true;
   dynamic total = 0;
+  int finalTotal = 0;
+  int netTotal = 0;
+  dynamic tax = 0;
   dynamic count = [];
+  var discountedPrice = 0;
+  dynamic discount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -371,35 +376,70 @@ class _FormWidgetState extends State<FormWidget> {
                   }
                 }),
           ),
-          InkWell(
-            onTap: () {
-              // setState(() {
-              //   _addNewItemRow();
-              // });
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    finalTotal = total;
+                    discountedPrice = finalTotal - discount;
+                    netTotal = (finalTotal - discount - (discountedPrice * (tax/100)));
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 32),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                    Text(
+                      "Update",
+                      style: GoogleFonts.mitr(fontSize: 20, color: Colors.white),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    )
+                  ]),
+                  decoration: BoxDecoration(
+                      color: Colors.green[300],
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              SizedBox(width: 20),
+              InkWell(
+                onTap: () {
+                  // setState(() {
+                  //   _addNewItemRow();
+                  // });
 
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SearchOrders()));
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 32),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 32,
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SearchOrders()));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 32),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                    Text(
+                      "Add Item",
+                      style: GoogleFonts.mitr(fontSize: 20, color: Colors.white),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    )
+                  ]),
+                  decoration: BoxDecoration(
+                      color: Colors.green[300],
+                      borderRadius: BorderRadius.circular(12)),
                 ),
-                Text(
-                  "Add Item",
-                  style: GoogleFonts.mitr(fontSize: 20, color: Colors.white),
-                ),
-                SizedBox(
-                  width: 8,
-                )
-              ]),
-              decoration: BoxDecoration(
-                  color: Colors.green[300],
-                  borderRadius: BorderRadius.circular(12)),
-            ),
+              ),
+            ],
           ),
           SizedBox(
             height: 16,
@@ -414,7 +454,7 @@ class _FormWidgetState extends State<FormWidget> {
                     child: Column(
                       children: [
                         Text(
-                          "Total Food Expenses",
+                          "Total",
                           style: GoogleFonts.mitr(fontSize: 18),
                           textAlign: TextAlign.center,
                         ),
@@ -430,7 +470,7 @@ class _FormWidgetState extends State<FormWidget> {
                               height: 50,
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black)),
-                              child: Center(child: Text(total.toString()))),
+                              child: Center(child: Text(finalTotal.toString()))),
                           SizedBox(
                             width: 8,
                           ),
@@ -469,7 +509,61 @@ class _FormWidgetState extends State<FormWidget> {
                                   borderSide: BorderSide(
                                       color: Colors.grey, width: 2.0),
                                 ),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  discount = int.parse(value);
+                                });
+                              },
+                                  // controller: expensePerson.discountPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.orange()
+                                  ),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                          ]),
+                        ),
+                      ],
+                    )),
+                    Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text(
+                                "Tax in %",
+                                style: GoogleFonts.mitr(fontSize: 18),
+                                textAlign: TextAlign.center,
                               )
+                            ]),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Visibility(
+                          // visible: expensePerson.isGetDiscount,
+                          child: Row(children: [
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                  decoration: InputDecoration(
+                                    suffix: Text("%"),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 2.0),
+                                ),
+                              ),
+                              onChanged: (value){
+                                setState(() {
+                                  tax = int.parse(value);
+                                });
+                              },
                                   // controller: expensePerson.discountPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.orange()
                                   ),
                             ),
@@ -496,17 +590,23 @@ class _FormWidgetState extends State<FormWidget> {
                           SizedBox(
                             width: 8,
                           ),
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey, width: 2.0),
-                                ),
-                              ),
-                              // controller: expensePerson.totalPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.green()
-                            ),
-                          ),
+                          Container(
+                              width: 150,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black)),
+                              child: Center(child: Text(netTotal.toString()))),
+                          // Expanded(
+                          //   child: TextField(
+                          //     decoration: InputDecoration(
+                          //       enabledBorder: OutlineInputBorder(
+                          //         borderSide: BorderSide(
+                          //             color: Colors.grey, width: 2.0),
+                          //       ),
+                          //     ),
+                          //     // controller: expensePerson.totalPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.green()
+                          //   ),
+                          // ),
                           SizedBox(
                             width: 8,
                           ),
