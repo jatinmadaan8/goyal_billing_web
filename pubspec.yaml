@@ -32,6 +32,14 @@ dependencies:
   firebase_core: "0.5.0"
   flappy_search_bar: ^1.7.2
   icon_badge: ^0.0.1+5
+  pdf: ^1.5.0
+  flutter_full_pdf_viewer: ^1.0.6
+  share: ^0.6.5+1
+  flutter_share: ^1.0.2+1
+  dio: ^3.0.10
+  printing: ^1.0.6
+  universal_html: ^1.2.3
+  uuid: ^2.0.4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

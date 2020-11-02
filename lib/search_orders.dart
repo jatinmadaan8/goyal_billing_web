@@ -13,11 +13,12 @@ class SearchOrders extends StatefulWidget {
 
 class _SearchOrdersState extends State<SearchOrders> {
   final SearchBarController<CatalogItem> _searchBarController =
+      // ignore: always_specify_types
       SearchBarController();
 
   Future<List<CatalogItem>> _getAllPosts(String text) async {
     print(text.length);
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     // if (isReplay) return [OrderData("Replaying !", "Replaying body", "abcd")];
     //if (text.length == 5) throw Error();
     // if (text.length == 6) return [];
@@ -84,7 +85,7 @@ class _SearchOrdersState extends State<SearchOrders> {
                 }
               }),
         ],
-        title: Text("Find Products"),
+        title: Text('Find Products'),
       ),
       body: SafeArea(
         child: SearchBar<CatalogItem>(
@@ -112,12 +113,12 @@ class _SearchOrdersState extends State<SearchOrders> {
                   subtitle: Text(orders.price),
                   onTap: () async {
                     await FirebaseFirestore.instance
-                        .collection("billing")
+                        .collection('billing')
                         .doc(orders.itemId)
                         .set({
-                      "itemName": orders.itemName,
-                      "itemPrice": orders.discountPrice ?? orders.price,
-                      "quantity": 1,
+                      'itemName': orders.itemName,
+                      'itemPrice': orders.discountPrice ?? orders.price,
+                      'quantity': 1,
                       'cartItemId': orders.itemId,
                     });
                     Navigator.pop(context);

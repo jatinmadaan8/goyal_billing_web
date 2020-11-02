@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gs_web/dashboard.dart';
 import 'package:gs_web/search_orders.dart';
 import 'package:gs_web/widgets/itemHeader.dart';
-import 'package:gs_web/widgets/total.dart';
+import 'package:uuid/uuid.dart';
 import 'mycard.dart';
 
 int index = 0;
@@ -16,15 +17,16 @@ class FormWidget extends StatefulWidget {
 }
 
 class _FormWidgetState extends State<FormWidget> {
-  int _count = 1;
   bool enableRemove = true;
   dynamic total = 0;
-  int finalTotal = 0;
-  int netTotal = 0;
+  dynamic finalTotal = 0;
+  dynamic netTotal = 0;
   dynamic tax = 0;
   dynamic count = [];
-  var discountedPrice = 0;
+  dynamic discountedPrice = 0;
   dynamic discount = 0;
+  DateTime timestamp = DateTime.now();
+  String orderId = Uuid().v1();
 
   @override
   Widget build(BuildContext context) {
@@ -36,28 +38,33 @@ class _FormWidgetState extends State<FormWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Row(children: [
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
             Text(
-              "Name",
+              'Name',
               style: GoogleFonts.mitr(fontSize: 16),
               textAlign: TextAlign.center,
             ),
-            SizedBox(
+            const SizedBox(
               width: 16,
             ),
             Expanded(
-              child: TextField(
+              child: TextFormField(
                   // controller: name,
+                  onChanged: (val) {
+                    setState(() {
+                      name = val;
+                    });
+                  },
                   textAlign: TextAlign.center,
                   // hintText: ".."
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 22,
                   )),
             )
           ]),
-          SizedBox(
+          const SizedBox(
             height: 22,
           ),
           ExpenseItemHeaderWidget(),
@@ -68,7 +75,7 @@ class _FormWidgetState extends State<FormWidget> {
             height: 3,
             color: Colors.grey[200],
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           SizedBox(
@@ -91,8 +98,6 @@ class _FormWidgetState extends State<FormWidget> {
 
                       count.add(element.data()['quantity']);
                     });
-                    print(count.toString());
-                    print(total.toString());
                     return Container(
                         // height: MediaQuery.of(context).size.height * 0.4,
                         child: ListView.builder(
@@ -125,7 +130,7 @@ class _FormWidgetState extends State<FormWidget> {
                                                   .data()['itemName'],
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 16,
                                           ),
                                         ],
@@ -209,7 +214,7 @@ class _FormWidgetState extends State<FormWidget> {
                                           },
                                           child: Container(
                                             padding: EdgeInsets.all(6),
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.remove,
                                               color: Colors.white,
                                               size: 32,
@@ -276,8 +281,8 @@ class _FormWidgetState extends State<FormWidget> {
                                             // });
                                           },
                                           child: Container(
-                                            padding: EdgeInsets.all(6),
-                                            child: Icon(
+                                            padding: const EdgeInsets.all(6),
+                                            child: const Icon(
                                               Icons.add,
                                               color: Colors.white,
                                               size: 32,
@@ -288,7 +293,7 @@ class _FormWidgetState extends State<FormWidget> {
                                                     BorderRadius.circular(6)),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 16,
                                         ),
                                       ],
@@ -298,7 +303,7 @@ class _FormWidgetState extends State<FormWidget> {
                                       flex: 1,
                                       child: Row(
                                         children: [
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 8,
                                           ),
                                           Container(
@@ -318,11 +323,11 @@ class _FormWidgetState extends State<FormWidget> {
                                                                 .data()[
                                                             'itemPrice']))
                                                     .toString(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     backgroundColor:
                                                         Colors.white),
                                               ))),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 8,
                                           ),
                                         ],
@@ -337,8 +342,8 @@ class _FormWidgetState extends State<FormWidget> {
                                             .delete();
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.all(6),
-                                        child: Icon(
+                                        padding: const EdgeInsets.all(6),
+                                        child: const Icon(
                                           Icons.close,
                                           color: Colors.white,
                                           size: 32,
@@ -351,8 +356,8 @@ class _FormWidgetState extends State<FormWidget> {
                                     )
                                   else
                                     Container(
-                                      padding: EdgeInsets.all(6),
-                                      child: Icon(
+                                      padding: const EdgeInsets.all(6),
+                                      child: const Icon(
                                         Icons.close,
                                         color: Colors.white,
                                         size: 32,
@@ -370,7 +375,7 @@ class _FormWidgetState extends State<FormWidget> {
                       },
                     ));
                   } else {
-                    return Center(
+                    return const Center(
                       child: CupertinoActivityIndicator(),
                     );
                   }
@@ -384,22 +389,25 @@ class _FormWidgetState extends State<FormWidget> {
                   setState(() {
                     finalTotal = total;
                     discountedPrice = finalTotal - discount;
-                    netTotal = (finalTotal - discount - (discountedPrice * (tax/100)));
+                    netTotal = (finalTotal - discount) +
+                        ((finalTotal - discount) * (tax / 100));
                   });
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 32),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 32),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(
+                    const Icon(
                       Icons.refresh,
                       color: Colors.white,
                       size: 32,
                     ),
                     Text(
                       "Update",
-                      style: GoogleFonts.mitr(fontSize: 20, color: Colors.white),
+                      style:
+                          GoogleFonts.mitr(fontSize: 20, color: Colors.white),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 8,
                     )
                   ]),
@@ -408,7 +416,7 @@ class _FormWidgetState extends State<FormWidget> {
                       borderRadius: BorderRadius.circular(12)),
                 ),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               InkWell(
                 onTap: () {
                   // setState(() {
@@ -419,18 +427,95 @@ class _FormWidgetState extends State<FormWidget> {
                       MaterialPageRoute(builder: (context) => SearchOrders()));
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 32),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 32),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(
+                    const Icon(
                       Icons.add,
                       color: Colors.white,
                       size: 32,
                     ),
                     Text(
                       "Add Item",
-                      style: GoogleFonts.mitr(fontSize: 20, color: Colors.white),
+                      style:
+                          GoogleFonts.mitr(fontSize: 20, color: Colors.white),
                     ),
-                    SizedBox(
+                    const SizedBox(
+                      width: 8,
+                    )
+                  ]),
+                  decoration: BoxDecoration(
+                      color: Colors.green[300],
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              const SizedBox(width: 20),
+              InkWell(
+                onTap: () async {
+                  final List<dynamic> items = [];
+
+                  final QuerySnapshot _query = await FirebaseFirestore.instance
+                      .collection('billing')
+                      .get();
+
+                  _query.docs.forEach((QueryDocumentSnapshot val) {
+                    print(val.data()['itemName']);
+
+                    setState(() {
+                      items.add({
+                        "itemName": val.data()['itemName'],
+                        "itemPrice": val.data()['itemPrice'],
+                        "quantity": val.data()['quantity']
+                      });
+                    });
+                  });
+                  print(items.toString());
+                  await FirebaseFirestore.instance
+                      .collection('offlineBills')
+                      .doc(orderId)
+                      .set({
+                    "orderId": orderId,
+                    "tax": tax ?? 0,
+                    "billAmount": netTotal ?? finalTotal,
+                    "items": items,
+                    "timestamp": timestamp,
+                    "name": name ?? "abcd"
+                  });
+
+                  await FirebaseFirestore.instance
+                      .collection('billing')
+                      .get()
+                      .then((QuerySnapshot value) {
+                    for (DocumentSnapshot ds in value.docs) {
+                      ds.reference.delete();
+                    }
+                  });
+
+                  setState(() {
+                    total = 0;
+                    finalTotal = 0;
+                    netTotal = 0;
+                    tax = 0;
+                    discountedPrice = 0;
+                    discount = 0;
+                    name = '';
+                  });
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 32),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    const Icon(
+                      Icons.save,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                    Text(
+                      'Save Order',
+                      style:
+                          GoogleFonts.mitr(fontSize: 20, color: Colors.white),
+                    ),
+                    const SizedBox(
                       width: 8,
                     )
                   ]),
@@ -441,11 +526,11 @@ class _FormWidgetState extends State<FormWidget> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 4),
+            margin: const EdgeInsets.symmetric(vertical: 4),
             child: Row(
               children: [
                 Spacer(),
@@ -458,11 +543,11 @@ class _FormWidgetState extends State<FormWidget> {
                           style: GoogleFonts.mitr(fontSize: 18),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
                         Row(children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
                           Container(
@@ -470,8 +555,9 @@ class _FormWidgetState extends State<FormWidget> {
                               height: 50,
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black)),
-                              child: Center(child: Text(finalTotal.toString()))),
-                          SizedBox(
+                              child:
+                                  Center(child: Text(finalTotal.toString()))),
+                          const SizedBox(
                             width: 8,
                           ),
                         ]),
@@ -484,7 +570,7 @@ class _FormWidgetState extends State<FormWidget> {
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 6,
                               ),
                               Text(
@@ -493,46 +579,46 @@ class _FormWidgetState extends State<FormWidget> {
                                 textAlign: TextAlign.center,
                               )
                             ]),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
                         Visibility(
                           // visible: expensePerson.isGetDiscount,
                           child: Row(children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 8,
                             ),
                             Expanded(
                               child: TextField(
-                                  decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey, width: 2.0),
-                                ),
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  discount = int.parse(value);
-                                });
-                              },
-                                  // controller: expensePerson.discountPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.orange()
+                                decoration: const InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 2.0),
                                   ),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    discount = double.parse(value);
+                                  });
+                                },
+                                // controller: expensePerson.discountPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.orange()
+                              ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 8,
                             ),
                           ]),
                         ),
                       ],
                     )),
-                    Expanded(
+                Expanded(
                     flex: 1,
                     child: Column(
                       children: [
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 6,
                               ),
                               Text(
@@ -541,33 +627,33 @@ class _FormWidgetState extends State<FormWidget> {
                                 textAlign: TextAlign.center,
                               )
                             ]),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
                         Visibility(
                           // visible: expensePerson.isGetDiscount,
                           child: Row(children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 8,
                             ),
                             Expanded(
                               child: TextFormField(
-                                  decoration: InputDecoration(
-                                    suffix: Text("%"),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey, width: 2.0),
-                                ),
-                              ),
-                              onChanged: (value){
-                                setState(() {
-                                  tax = int.parse(value);
-                                });
-                              },
-                                  // controller: expensePerson.discountPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.orange()
+                                decoration: const InputDecoration(
+                                  suffix: Text("%"),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 2.0),
                                   ),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    tax = int.parse(value);
+                                  });
+                                },
+                                // controller: expensePerson.discountPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.orange()
+                              ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 8,
                             ),
                           ]),
@@ -579,7 +665,7 @@ class _FormWidgetState extends State<FormWidget> {
                     child: Column(
                       children: [
                         Text(
-                          "Net Total",
+                          'Net Total',
                           style: GoogleFonts.mitr(fontSize: 18),
                           textAlign: TextAlign.center,
                         ),
@@ -607,17 +693,17 @@ class _FormWidgetState extends State<FormWidget> {
                           //     // controller: expensePerson.totalPersonController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.green()
                           //   ),
                           // ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
                         ]),
                       ],
                     )),
-                Spacer(),
+                const Spacer(),
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
           Container(
@@ -627,220 +713,11 @@ class _FormWidgetState extends State<FormWidget> {
           // ExpenseItemTotalWidget(expensePerson, onChanged: (g) {
           //   update();
           // }),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
         ],
       ),
     );
   }
-
-//   void _addNewItemRow() {
-//     setState(() {
-//       _count = _count + 1;
-//     });
-//   }
-// }
-//
-// class AddNewItem extends StatefulWidget {
-//   @override
-//   _AddNewItemState createState() => _AddNewItemState();
-// }
-//
-// class _AddNewItemState extends State<AddNewItem> {
-//   bool enableRemove = true;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: EdgeInsets.symmetric(vertical: 4),
-//       child: Column(
-//         children: [
-//           Row(
-//             children: [
-//               Container(
-//                   constraints: BoxConstraints(minWidth: 32),
-//                   child: Text(
-//                     "•",
-//                     style: GoogleFonts.mitr(fontSize: 20),
-//                     textAlign: TextAlign.end,
-//                   )),
-//               Expanded(
-//                   flex: 1,
-//                   child: Row(
-//                     children: [
-//                       SizedBox(
-//                         width: 16,
-//                       ),
-//                       Expanded(
-//                           child: TextField(
-//                         // controller: expenseItemController.nameController, fontSize: 22,  hintText: ".."
-//                         textAlign: TextAlign.center,
-//                         decoration: new InputDecoration(
-//                           hintText: "Enter Item Name",
-//                         ),
-//                       )),
-//                       SizedBox(
-//                         width: 16,
-//                       ),
-//                     ],
-//                   )),
-//               Expanded(
-//                 flex: 1,
-//                 child: Row(children: [
-//                   SizedBox(
-//                     width: 16,
-//                   ),
-//                   Expanded(
-//                       child: TextField(
-//                     // controller: expenseItemController.priceController,
-//                     // fontSize: 22,
-//                     textAlign: TextAlign.center,
-//                     keyboardType: TextInputType.numberWithOptions(
-//                       signed: false,
-//                       decimal: true,
-//                     ),
-//                     decoration: new InputDecoration(
-//                       hintText: "Enter Price",
-//                     ),
-//                     // hintText: "0",
-//                     // onChanged: (text) {
-//                     //   double price = double.tryParse(text) ?? 0;
-//                     //   if (onPriceChanged != null) {
-//                     //     onPriceChanged(expenseItemController, price);
-//                     //   }
-//                     // }
-//                   )),
-//                   SizedBox(
-//                     width: 16,
-//                   ),
-//                 ]),
-//               ),
-//               Expanded(
-//                 flex: 1,
-//                 child: Row(
-//                   children: [
-//                     SizedBox(
-//                       width: 16,
-//                     ),
-//                     GestureDetector(
-//                       // onTap: () {
-//                       //   expenseItemController.decreaseAmount();
-//                       //   if (onAmountChanged != null) {
-//                       //     onAmountChanged(expenseItemController, expenseItemController.expenseItem.amount);
-//                       //   }
-//                       // },
-//                       child: Container(
-//                         padding: EdgeInsets.all(6),
-//                         child: Icon(
-//                           Icons.remove,
-//                           color: Colors.white,
-//                           size: 32,
-//                         ),
-//                         decoration: BoxDecoration(
-//                             color: Colors.orange[300],
-//                             borderRadius: BorderRadius.circular(6)),
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       width: 6,
-//                     ),
-//                     Expanded(
-//                         child: TextField(
-//                       // controller: expenseItemController.amountController,
-//                       textAlign: TextAlign.center,
-//                       decoration: new InputDecoration(
-//                         hintText: "0",
-//                       ),
-//                       //
-//                       // onChanged: (text) {
-//                       //   int amount = double.tryParse(text) ?? 0;
-//                       //   if (onAmountChanged != null) {
-//                       //     onAmountChanged(expenseItemController, amount);
-//                       //   }
-//                       // }
-//                     )),
-//                     SizedBox(
-//                       width: 6,
-//                     ),
-//                     GestureDetector(
-//                       // onTap: () {
-//                       //   expenseItemController.increaseAmount();
-//                       //   if (onAmountChanged != null) {
-//                       //     onAmountChanged(expenseItemController, expenseItemController.expenseItem.amount);
-//                       //   }
-//                       // },
-//                       child: Container(
-//                         padding: EdgeInsets.all(6),
-//                         child: Icon(
-//                           Icons.add,
-//                           color: Colors.white,
-//                           size: 32,
-//                         ),
-//                         decoration: BoxDecoration(
-//                             color: Colors.blue[300],
-//                             borderRadius: BorderRadius.circular(6)),
-//                       ),
-//                     ),
-//                     SizedBox(
-//                       width: 16,
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               Expanded(
-//                   flex: 1,
-//                   child: Row(
-//                     children: [
-//                       SizedBox(
-//                         width: 8,
-//                       ),
-//                       Expanded(
-//                         child: TextField(
-//                           textAlign: TextAlign.center,
-//                           decoration: new InputDecoration(
-//                             hintText: "0",
-//                           ),
-//                           // controller: expenseItemController.sumController, fontSize: 22, textAlign: TextAlign.center, readOnly: true, theme: MyTextFieldTheme.primary()
-//                         ),
-//                       ),
-//                       SizedBox(
-//                         width: 8,
-//                       ),
-//                     ],
-//                   )),
-//               if (enableRemove)
-//                 GestureDetector(
-//                   // onTap: onRemoveItem,
-//                   child: Container(
-//                     padding: EdgeInsets.all(6),
-//                     child: Icon(
-//                       Icons.close,
-//                       color: Colors.white,
-//                       size: 32,
-//                     ),
-//                     decoration: BoxDecoration(
-//                         color: Colors.red[300],
-//                         borderRadius: BorderRadius.circular(6)),
-//                   ),
-//                 )
-//               else
-//                 Container(
-//                   padding: EdgeInsets.all(6),
-//                   child: Icon(
-//                     Icons.close,
-//                     color: Colors.white,
-//                     size: 32,
-//                   ),
-//                   decoration: BoxDecoration(
-//                       color: Colors.grey[100],
-//                       borderRadius: BorderRadius.circular(6)),
-//                 )
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 }
