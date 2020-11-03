@@ -16,83 +16,86 @@ class NewOrderDetails extends StatefulWidget {
 class _NewOrderDetailsState extends State<NewOrderDetails> {
   List<OrderItemData> _items = [];
 
-  Widget bodyData() => Card(
-    child: DataTable(
-        onSelectAll: (b) {},
-        sortColumnIndex: 0,
-        sortAscending: false,
-        //dataRowHeight: 60,
-        //columnSpacing: 20,
-        columns: <DataColumn>[
-          DataColumn(
-            label: Text("Items",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            //numeric: false,
-            onSort: (i, b) {
-              print("$i $b");
-              setState(() {
-                _items.sort((a, b) => a.itemName.compareTo(b.itemName));
-              });
-            },
-            tooltip: "To display list of items",
-          ),
-          DataColumn(
-            label: Text("Quantity",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            numeric: true,
-            onSort: (i, b) {
-              print("$i $b");
-              setState(() {
-                _items.sort((a, b) => a.quantity.compareTo(b.quantity));
-              });
-            },
-            tooltip: "To display quantity of each items",
-          ),
-          DataColumn(
-            label: Text(
-              "Total",
-              style: TextStyle(fontWeight: FontWeight.bold),
+  Widget bodyData() => Padding(
+    padding: const EdgeInsets.all(5.0),
+    child: Card(
+      child: DataTable(
+          onSelectAll: (b) {},
+          sortColumnIndex: 0,
+          sortAscending: false,
+          //dataRowHeight: 60,
+          //columnSpacing: 20,
+          columns: <DataColumn>[
+            DataColumn(
+              label: Text("Items",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              //numeric: false,
+              onSort: (i, b) {
+                print("$i $b");
+                setState(() {
+                  _items.sort((a, b) => a.itemName.compareTo(b.itemName));
+                });
+              },
+              tooltip: "To display list of items",
             ),
-            numeric: true,
-            onSort: (i, b) {
-              print("$i $b");
-              setState(() {
-                _items.sort((a, b) =>
-                    a.itemPrice *
-                    a.quantity.compareTo(b.itemPrice * b.quantity));
-              });
-            },
-            tooltip: "To display total price",
-          ),
-        ],
-        rows: _items
-            .map(
-              (item) => DataRow(
-                cells: [
-                  DataCell(
-                    Text(
-                      item.itemName ?? 'aaabbcc',
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    showEditIcon: false,
-                    placeholder: false,
-                  ),
-                  DataCell(
-                    Text(item.quantity.toString() ?? 'vfodjv'),
-                    showEditIcon: false,
-                    placeholder: false,
-                  ),
-                  DataCell(
-                    Text((item.quantity * double.parse(item.itemPrice))
-                            .toString() ??
-                        'vkje'),
-                    showEditIcon: false,
-                    placeholder: false,
-                  )
-                ],
+            DataColumn(
+              label: Text("Quantity",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              numeric: true,
+              onSort: (i, b) {
+                print("$i $b");
+                setState(() {
+                  _items.sort((a, b) => a.quantity.compareTo(b.quantity));
+                });
+              },
+              tooltip: "To display quantity of each items",
+            ),
+            DataColumn(
+              label: Text(
+                "Total",
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-            )
-            .toList()),
+              numeric: true,
+              onSort: (i, b) {
+                print("$i $b");
+                setState(() {
+                  _items.sort((a, b) =>
+                      a.itemPrice *
+                      a.quantity.compareTo(b.itemPrice * b.quantity));
+                });
+              },
+              tooltip: "To display total price",
+            ),
+          ],
+          rows: _items
+              .map(
+                (item) => DataRow(
+                  cells: [
+                    DataCell(
+                      Text(
+                        item.itemName ?? 'aaabbcc',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      showEditIcon: false,
+                      placeholder: false,
+                    ),
+                    DataCell(
+                      Text(item.quantity.toString() ?? 'vfodjv'),
+                      showEditIcon: false,
+                      placeholder: false,
+                    ),
+                    DataCell(
+                      Text((item.quantity * double.parse(item.itemPrice))
+                              .toString() ??
+                          'vkje'),
+                      showEditIcon: false,
+                      placeholder: false,
+                    )
+                  ],
+                ),
+              )
+              .toList()),
+    ),
   );
 
   Widget _billCard() {
@@ -104,7 +107,7 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.all(10),
             child: Text(
               "Invoice",
               style: TextStyle(
@@ -123,9 +126,9 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                  padding: EdgeInsets.all(5), child: Text("Total items: ")),
+                  padding: EdgeInsets.all(10), child: Text("Total items: ")),
               Container(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(10),
                   child: Text(_items.length.toString() ?? 'jbcd'))
             ],
           ),
@@ -133,9 +136,9 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                  padding: EdgeInsets.all(5), child: Text("Total amount: ")),
+                  padding: EdgeInsets.all(10), child: Text("Total amount: ")),
               Container(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(10),
                   child: Text(widget.orders.totalPrice.toString()))
             ],
           ),
@@ -143,9 +146,9 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                  padding: EdgeInsets.all(5), child: Text("Tax(in %): ")),
+                  padding: EdgeInsets.all(10), child: Text("Tax(in %): ")),
               Container(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(10),
                   child: Text(widget.orders.mode.toString()))
             ],
           ),
@@ -159,9 +162,9 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                  padding: EdgeInsets.all(5), child: Text("Final amount: ")),
+                  padding: EdgeInsets.all(10), child: Text("Final amount: ")),
               Container(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(10),
                   child: Text("${widget.orders.totalPrice.toString()}"))
             ],
           ),
@@ -179,7 +182,7 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.all(10),
             child: Text(
               "Customer Details",
               style: TextStyle(
