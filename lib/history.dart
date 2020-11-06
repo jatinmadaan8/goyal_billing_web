@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gs_web/widgets/new_order_details.dart';
 import 'package:gs_web/widgets/order_data.dart';
+import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -9,6 +11,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +44,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                     ),
                                   )));
                         },
-                        title: Text('Name: ${snapshot.data.docs[index].data()['name']}'),
+                        title: Text('Order ID: ${snapshot.data.docs[index].data()['orderId']}'),
+                        subtitle: Text(timeago.format(snapshot.data.docs[index].data()['timestamp'].toDate()),
                       ),
+                      )
                     );
                   },
                 ),

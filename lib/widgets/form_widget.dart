@@ -26,7 +26,7 @@ class _FormWidgetState extends State<FormWidget> {
   dynamic discountedPrice = 0;
   dynamic discount = 0;
   DateTime timestamp = DateTime.now();
-  String orderId = Uuid().v1();
+  String orderId = "ORD-" + Uuid().v1().substring(0,8);
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +220,7 @@ class _FormWidgetState extends State<FormWidget> {
                                               size: 32,
                                             ),
                                             decoration: BoxDecoration(
-                                                color: Colors.orange[300],
+                                                color: Colors.deepOrange,
                                                 borderRadius:
                                                     BorderRadius.circular(6)),
                                           ),
@@ -288,7 +288,7 @@ class _FormWidgetState extends State<FormWidget> {
                                               size: 32,
                                             ),
                                             decoration: BoxDecoration(
-                                                color: Colors.blue[300],
+                                                color: Colors.deepOrange,
                                                 borderRadius:
                                                     BorderRadius.circular(6)),
                                           ),
@@ -412,7 +412,7 @@ class _FormWidgetState extends State<FormWidget> {
                     )
                   ]),
                   decoration: BoxDecoration(
-                      color: Colors.green[300],
+                      color: Colors.deepOrange,
                       borderRadius: BorderRadius.circular(12)),
                 ),
               ),
@@ -445,7 +445,7 @@ class _FormWidgetState extends State<FormWidget> {
                     )
                   ]),
                   decoration: BoxDecoration(
-                      color: Colors.green[300],
+                      color: Colors.deepOrange,
                       borderRadius: BorderRadius.circular(12)),
                 ),
               ),
@@ -520,7 +520,7 @@ class _FormWidgetState extends State<FormWidget> {
                     )
                   ]),
                   decoration: BoxDecoration(
-                      color: Colors.green[300],
+                      color: Colors.deepOrange,
                       borderRadius: BorderRadius.circular(12)),
                 ),
               ),

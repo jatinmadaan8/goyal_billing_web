@@ -113,7 +113,7 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
-                  color: Colors.blue),
+                  color:  Colors.deepOrange,),
             ),
           ),
           Container(
@@ -188,7 +188,7 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
-                  color: Colors.blue),
+                  color: Colors.deepOrange,),
             ),
           ),
           Container(
@@ -248,7 +248,7 @@ class _NewOrderDetailsState extends State<NewOrderDetails> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Colors.blue),
+                    color: Colors.deepOrange,),
               ),
             ),
             bodyData(),

@@ -126,37 +126,39 @@ class _OrdersPdfState extends State<OrdersPdf> {
     final Uint8List bytes = pdf.save();
     final html.Blob blob = html.Blob([bytes], 'application/pdf');
 
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            RaisedButton(
-              child: const Text("Open"),
-              onPressed: () {
-                final url = html.Url.createObjectUrlFromBlob(blob);
-                html.window.open(url, "_blank");
-                html.Url.revokeObjectUrl(url);
-              },
-            ),
-            RaisedButton(
-              child: Text("Download"),
-              onPressed: () {
-                final url = html.Url.createObjectUrlFromBlob(blob);
-                final anchor =
-                    html.document.createElement('a') as html.AnchorElement
-                      ..href = url
-                      ..style.display = 'none'
-                      ..download = 'some_name.pdf';
-                html.document.body.children.add(anchor);
-                anchor.click();
-                html.document.body.children.remove(anchor);
-                html.Url.revokeObjectUrl(url);
-              },
-            ),
-          ],
-          mainAxisAlignment: MainAxisAlignment.center,
-        ),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.3,
+      child: Center(
+          child: Column(
+            children: <Widget>[
+              Text("Print"),
+              SizedBox(height:20),
+              RaisedButton(
+                child: const Text("Open"),
+                onPressed: () {
+                  final url = html.Url.createObjectUrlFromBlob(blob);
+                  html.window.open(url, "_blank");
+                  html.Url.revokeObjectUrl(url);
+                },
+              ),
+              RaisedButton(
+                child: Text("Download"),
+                onPressed: () {
+                  final url = html.Url.createObjectUrlFromBlob(blob);
+                  final anchor =
+                      html.document.createElement('a') as html.AnchorElement
+                        ..href = url
+                        ..style.display = 'none'
+                        ..download = 'some_name.pdf';
+                  html.document.body.children.add(anchor);
+                  anchor.click();
+                  html.document.body.children.remove(anchor);
+                  html.Url.revokeObjectUrl(url);
+                },
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          ),
       ),
     );
   }

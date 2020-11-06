@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +20,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.deepOrange,
         label: const Text('History'),
         onPressed: () {
           Navigator.push(
@@ -48,7 +51,7 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 Text(
                   "Goyal Sales",
-                  style: GoogleFonts.mitr(fontSize: 25),
+                  style: GoogleFonts.mitr(fontSize: 25, color: Colors.deepOrange,),
                   textAlign: TextAlign.end,
                 ),
                 const Spacer(),
@@ -60,13 +63,24 @@ class _DashboardState extends State<Dashboard> {
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       return IconButton(
                         icon: const Icon(Icons.print),
+                        color: Colors.deepOrange,
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OrdersPdf(
-                                        orders: snapshot.data.docs,
-                                      )));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => OrdersPdf(
+                          //               orders: snapshot.data.docs,
+                          //             )));
+                          setState(() {
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                content: OrdersPdf(
+                                  orders: snapshot.data.docs,
+                                ),
+                              ),
+                            );
+                          });
                         },
                       );
                     })
