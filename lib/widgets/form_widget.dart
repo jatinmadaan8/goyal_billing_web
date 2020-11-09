@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gs_web/dashboard.dart';
 import 'package:gs_web/search_orders.dart';
 import 'package:gs_web/widgets/itemHeader.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'mycard.dart';
 
@@ -27,6 +28,7 @@ class _FormWidgetState extends State<FormWidget> {
   dynamic discount = 0;
   DateTime timestamp = DateTime.now();
   String orderId = "ORD-" + Uuid().v1().substring(0,8);
+  dynamic newFormat;
 
   @override
   Widget build(BuildContext context) {
@@ -470,6 +472,9 @@ class _FormWidgetState extends State<FormWidget> {
                     });
                   });
                   print(items.toString());
+                  newFormat = DateFormat("yyyy-MM-dd");
+                  dynamic updatedDt =
+                  newFormat.format(timestamp);
                   await FirebaseFirestore.instance
                       .collection('offlineBills')
                       .doc(orderId)
@@ -479,7 +484,8 @@ class _FormWidgetState extends State<FormWidget> {
                     "billAmount": netTotal ?? finalTotal,
                     "items": items,
                     "timestamp": timestamp,
-                    "name": name ?? "abcd"
+                    "name": name ?? "abcd",
+                    "date": updatedDt
                   });
 
                   await FirebaseFirestore.instance
